@@ -1,0 +1,403 @@
+<!doctype html>
+
+<html lang="pt-BR" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="assets/" data-template="vertical-menu-template-free" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Calculadora de consumo</title>
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core -->
+    <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <!-- Page -->
+    <link rel="stylesheet" href="assets/css/index-main.css">
+    <script src="assets/vendor/js/helpers.js"></script>
+    <script src="assets/js/config.js"></script>
+</head>
+
+<body>
+    <button class="btn btn-dark btn-sm" id="reopenButton" onclick="openWindow()">Abrir Janela</button>
+    <div class="mac-window" id="macWindow">
+        <div class="title-bar">
+            <div class="control-buttons">
+                <div class="control-button close" onclick="closeWindow()"></div>
+                <div class="control-button minimize" onclick="toggleMinimizeWindow()"></div>
+                <div class="control-button maximize" onclick="maximizeWindow()"></div>
+            </div>
+            <span<em>Simulador de consumo</em></span>
+        </div>
+
+        <div class="window-content" id="windowContent">
+
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="content-left">
+                                    <span>Eletrodomésticos cadastrados</span>
+                                    <div class="d-flex align-items-end mt-2">
+                                        <span>
+                                            <h4 id="qtdEletrodomesticos" class="mb-0 me-2">0</h4>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-label-success rounded p-2">
+                                    <i class="bx bxs-printer bx-sm"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="content-left">
+                                    <span>Estimativa de emissão de CO²</span>
+                                    <div class="d-flex align-items-end mt-2">
+                                        <span>
+                                            <h4 id="qtdEmissaoCO2" class="mb-0 me-2">0</h4>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-label-success rounded p-2">
+                                    <i class="bx bxs-radiation bx-sm"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="content-left">
+                                    <span>Consumo mensal total</span>
+                                    <div class="d-flex align-items-end mt-2">
+                                        <span>
+                                            <h4 id="qtdConsumoDiario" class="mb-0 me-2">0</h4>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-label-success rounded p-2">
+                                    <i class="bx bxs-bolt bx-sm"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 d-flex justify-content-between align-items-center mt-3 mb-5">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-outline-success btn-sm" type="button" aria-expanded="false"
+                        onclick="showPage('inicioContent')">
+                        <i class='bx bx-home' style="font-size: 1.2em; margin-right: 4px;"></i> Início
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" type="button" aria-expanded="false"
+                        onclick="showPage('relatorioContent')">
+                        <i class='bx bx-chart' style="font-size: 1.2em; margin-right: 4px;"></i> Relatório
+                    </button>
+                </div>
+
+                <button id="btnNovoEletro" class="btn btn-success btn-sm" type="button" aria-expanded="false"
+                    data-bs-toggle="collapse" data-bs-target="#collapseCreate">
+                    <i class='bx bx-plus' style="font-size: 1.2em; margin-right: 4px;"></i> Registrar
+                    eletrodoméstico
+                </button>
+            </div>
+
+            <section id="inicioContent" class="page-content">
+                <div class="collapse mt-3 mb-3" id="collapseCreate">
+                    <div class="card card-body">
+                        <form id="formCadastro" class="row g-3">
+                            <div class="col-md-4" style="margin-top: 10px;">
+                                <label class="form-label" for="nome">Nome</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="bx bx-notepad"></i></span>
+                                    <input required
+                                        style="border-top-right-radius: 5px; border-bottom-right-radius: 5px"
+                                        type="text" id="nome" name="nome" class="form-control" placeholder="Nome" />
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 10px;">
+                                <label class="form-label" for="potencia">Potência</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="bx bx-line-chart"></i></span>
+                                    <input required
+                                        style="border-top-right-radius: 5px; border-bottom-right-radius: 5px"
+                                        type="number" id="potencia" name="potencia" class="form-control"
+                                        placeholder="Em watts (w)" />
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 10px;">
+                                <label class="form-label" for="tempoUso">Tempo médio de uso diário</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="bx bx-time"></i></span>
+                                    <input required
+                                        style="border-top-right-radius: 5px; border-bottom-right-radius: 5px"
+                                        type="number" id="tempoUso" name="tempoUso" class="form-control"
+                                        placeholder="Em horas (h)" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-end mt-3">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Registrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="modalDetalhes" class="modal">
+                    <div class="modal-content" style="border-radius: 0px 0px 5px 5px;">
+                        <span class="close" style="font-size: 30px;">&times;</span>
+                        <h4 class="mb-0"><em>Detalhes do Eletrodoméstico</em></h4>
+                        <div class="col-lg-6">
+                            <h5 id="titleNomeEletro" class="text-light fw-medium mt-0"></h5>
+                            <div class="mt-4">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-hourglass me-3"></i>
+                                        <span>Tempo de uso diário: <br>
+                                            <em><strong><span id="spanTempoDiario"></span>
+                                                    horas</strong></em></span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bx-pie-chart-alt me-3"></i>
+                                        <span>Consumo de energia diária estimada: <br>
+                                            <em><strong><span id="spanConsumoDiario"></span>
+                                                    kWh</strong></em></span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bx-pie-chart-alt-2 me-3"></i>
+                                        <span>Consumo de energia mensal estimada: <br>
+                                            <em><strong><span id="spanConsumoMensal"></span>
+                                                    kWh</strong></em></span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bx-purchase-tag me-3"></i>
+                                        <span>Classificação de eficiência energética:
+                                            <em><strong><span id="classificacaoEficiencia"></span></strong></em></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tableDiv" style="height: 200px;">
+                    <table id="listaEletrodomesticos" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Tempo de uso</th>
+                                <th scope="col">Consumo diário</th>
+                                <th scope="col">Consumo mensal</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="initialTableAlert" class="alert alert-success" role="alert"
+                        style="text-align: center; margin-left: 7%; margin-right: 7%;">
+                        Nenhum registro gerado
+                    </div>
+                </div>
+                <div id="paginationControls" class="pagination" style="margin-top: 3.5rem !important;"></div>
+            </section>
+
+
+            <section id="relatorioContent" class="page-content" style="display: none;">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-6">
+                            <div class="card-body">
+                                <h4 class="mb-0">Relatório geral</h4>
+                                <div class="card-subtitle mb-4"><small id="titleNomeEletro"
+                                        class="text-light fw-medium mt-0"><em>Sugestões para uma melhor otimização de
+                                            seu consumo de energia</em></small></div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-bulb me-3"></i>
+                                        <span>Substituir eletrodomésticos <strong>pouco eficientes</strong></span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-time me-3"></i>
+                                        <span>Diminuir tempo de uso de eletrodomésticos <strong>pouco
+                                                eficientes</strong></span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-plug me-3"></i>
+                                        <span>Desligar aparelhos da tomada quando não estiverem em uso</span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-chart me-3"></i>
+                                        <span>Evitar o uso de aparelhos de alto consumo em excesso</span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bx bxs-medal me-3"></i>
+                                        <span>Preferir eletrodomésticos com selo de eficiência energética</span>
+                                    </li>
+                                </ul>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex flex-column" style="gap: 63px;">
+                        <div class="col-md-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                                        <div class="avatar flex-shrink-0">
+                                            <span class="badge bg-label-success rounded p-2">
+                                                <i class="bx bxs-cog bx-sm"></i>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                    <p class="mb-1">Eletrodoméstico mais econômico</p>
+                                    <h5 id="eletroMaisEconomico" class="card-title" style="margin-bottom: 24px;"></h5>
+                                    <small id="alertMaisEconomico" class="text-success fw-medium"><i
+                                            class="bx bx-up-arrow-alt"></i></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                                        <div class="avatar flex-shrink-0">
+                                            <span class="badge bg-label-success rounded p-2">
+                                                <i class="bx bxs-cog bx-sm"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1">Eletrodoméstico menos econômico</p>
+                                    <h5 id="eletroMenosEconomico" class="card-title" style="margin-bottom: 19px;"></h5>
+                                    <small id="alertMenosEconomico" class="text-success fw-medium"><i
+                                            class="bx bx-up-arrow-alt"></i></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 order-0 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-6">
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <h3 id="chartTotalEletrodomesticos" class="mb-1">0</h3>
+                                        <small>Total de eletrodomésticos</small>
+                                    </div>
+                                    <div id="chartEficiency"></div>
+                                </div>
+                                <ul class="p-0 m-0">
+                                    <li class="d-flex align-items-center mb-5">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-success"><i
+                                                    class="bx bxs-bolt-circle"></i></span>
+                                        </div>
+                                        <div
+                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Classificação A</h6>
+                                                <small class="text-muted"><em>Muito eficiente</em></small>
+                                            </div>
+                                            <div class="user-progress">
+                                                <h6 class="mb-0">0</h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-center mb-5">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-warning"><i
+                                                    class="bx bxs-bolt-circle"></i></span>
+                                        </div>
+                                        <div
+                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Classificação B</h6>
+                                                <small class="text-muted"><em>Eficiente</em></small>
+                                            </div>
+                                            <div class="user-progress">
+                                                <h6 class="mb-0">0</h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-center mb-5">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-danger"><i
+                                                    class="bx bxs-bolt-circle"></i></span>
+                                        </div>
+                                        <div
+                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Classificação C</h6>
+                                                <small class="text-muted"><em>Moderado</em></small>
+                                            </div>
+                                            <div class="user-progress">
+                                                <h6 class="mb-0">0</h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-center mb-5">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-dark"><i
+                                                    class="bx bxs-bolt-circle"></i></span>
+                                        </div>
+                                        <div
+                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Classificação D</h6>
+                                                <small class="text-muted"><em>Pouco eficiente</em></small>
+                                            </div>
+                                            <div class="user-progress">
+                                                <h6 class="mb-0">0</h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+
+    <!-- Core -->
+    <script src="assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="assets/vendor/libs/popper/popper.js"></script>
+    <script src="assets/vendor/js/bootstrap.js"></script>
+    <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/vendor/js/menu.js"></script>
+    <script src="assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <!-- Page -->
+    <script src="assets/js/index-main.js"></script>
+</body>
+
+</html>
