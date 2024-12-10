@@ -1,0 +1,164 @@
+body {
+    background-color: #f3fdf0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.btnAcao {
+    transition: transform 0.5s ease;
+}
+
+.btnAcao:hover {
+    transform: translateY(-5px);
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 5%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+}
+
+#reopenButton {
+    display: none !important;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.mac-window {
+    position: relative;
+    width: 1360px;
+    min-height: 768px;
+    background-color: #f7f7f7 !important;
+    border-radius: 8px;
+    box-shadow: 15px 15px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.mac-window.fixed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transition: none;
+    transform: translate(-50%, -50%);
+}
+
+.offcanvas {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    z-index: 1050;
+    border: none;
+}
+
+.title-bar {
+    display: flex;
+    align-items: center;
+    background-color: #e1e1e1;
+    padding: 8px;
+}
+
+.window-content {
+    padding: 20px;
+    display: none;
+}
+
+/* PAGINAÇÃO */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: white;
+    background-color: #2f862c;
+    border: none;
+    border-radius: 3px;
+}
+
+/* CONTROL BUTTONS */
+.control-buttons {
+    display: flex;
+    gap: 8px;
+    margin-right: auto;
+}
+
+.control-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.control-button.close {
+    background-color: #ff5f57;
+}
+
+.control-button.minimize {
+    background-color: #ffbd2e;
+}
+
+.control-button.maximize {
+    background-color: #28c840;
+}
+
+.fullscreen {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+.minimized {
+    transform: translateY(var(--minimized-position)) scale(1);
+    transition: all 0.5s ease;
+}
+
+.minimized:hover {
+    transform: translateY(calc(var(--minimized-position) - 50px)) scale(1.008);
+}
